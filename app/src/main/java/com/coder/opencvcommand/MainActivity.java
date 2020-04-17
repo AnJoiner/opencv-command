@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.coder.opencv.annotation.BlurType;
 import com.coder.opencv.cmd.BlurryCmd;
 import com.coder.opencvcommand.utils.FileUtils;
 
@@ -38,18 +39,24 @@ public class MainActivity extends AppCompatActivity {
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long currentTime = System.currentTimeMillis();
-                int ret = BlurryCmd.blurImage(inputPath, outputPath, 21,1);
-                if (ret == 1) {
-                    mTimeText.setText(String.format("时长:%s",
-                            System.currentTimeMillis() - currentTime));
-                    RequestOptions options =
-                            RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)
-                                    .skipMemoryCache(true);
-                    Glide.with(MainActivity.this)
-                            .applyDefaultRequestOptions(options)
-                            .load(outputPath).into(imageView);
-                }
+                final long currentTime = System.currentTimeMillis();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int ret = BlurryCmd.blurImage(inputPath, outputPath, 21, BlurType.GAUSSIAN_BLUR);
+                        if (ret == 1) {
+                            mTimeText.setText(String.format("时长:%s",
+                                    System.currentTimeMillis() - currentTime));
+                            RequestOptions options =
+                                    RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true);
+                            Glide.with(MainActivity.this)
+                                    .applyDefaultRequestOptions(options)
+                                    .load(outputPath).into(imageView);
+                        }
+                    }
+                }).start();
+
             }
         });
     }

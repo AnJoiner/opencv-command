@@ -1,5 +1,7 @@
 package com.coder.opencv.cmd;
 
+import com.coder.opencv.annotation.BlurType;
+
 /**
  * @author: AnJoiner
  * @datetime: 20-4-16
@@ -12,6 +14,6 @@ public class BlurryCmd {
     }
 
 
-    public static  native int blurImage(String inputPath,String outputPath,int blurry, int type);
+    public static  native int blurImage(String inputPath,String outputPath,int blurry,@BlurType int type);
 
 }
