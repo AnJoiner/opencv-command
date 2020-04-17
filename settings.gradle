@@ -1,0 +1,3 @@
+rootProject.name='opencv-command'
+include ':app'
+include ':opencv'
